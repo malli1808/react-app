@@ -1,16 +1,15 @@
 {
   "files": {
-    "main.css": "/react-app/static/css/main.073c9b0a.css",
-    "main.js": "/react-app/static/js/main.20d157f5.js",
-    "static/js/787.b701888c.chunk.js": "/react-app/static/js/787.b701888c.chunk.js",
-    "static/media/logo.svg": "/react-app/static/media/logo.6ce24c58023cc2f8fd88fe9d219db6c6.svg",
-    "index.html": "/react-app/index.html",
-    "main.073c9b0a.css.map": "/react-app/static/css/main.073c9b0a.css.map",
-    "main.20d157f5.js.map": "/react-app/static/js/main.20d157f5.js.map",
-    "787.b701888c.chunk.js.map": "/react-app/static/js/787.b701888c.chunk.js.map"
+    "main.css": "/medical-stock/static/css/main.073c9b0a.css",
+    "main.js": "/medical-stock/static/js/main.2f0e134b.js",
+    "static/js/787.b701888c.chunk.js": "/medical-stock/static/js/787.b701888c.chunk.js",
+    "index.html": "/medical-stock/index.html",
+    "main.073c9b0a.css.map": "/medical-stock/static/css/main.073c9b0a.css.map",
+    "main.2f0e134b.js.map": "/medical-stock/static/js/main.2f0e134b.js.map",
+    "787.b701888c.chunk.js.map": "/medical-stock/static/js/787.b701888c.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.073c9b0a.css",
-    "static/js/main.20d157f5.js"
+    "static/js/main.2f0e134b.js"
   ]
 }
