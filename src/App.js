@@ -1,12 +1,19 @@
-import logo from './logo.svg';
 import './App.css';
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        This is testing app
-      </header>
+      <div>
+        <label>First Name</label>
+        <input name="firstName" />
+      </div>
+      <div>
+        <label>Second Name</label>
+        <input name='lastName' />
+      </div>
+      <div>
+        <input type='submit' />
+      </div>
     </div>
   );
 }
