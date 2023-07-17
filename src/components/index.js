@@ -170,7 +170,7 @@ export default class Crud extends React.Component {
                                     medicines[medicine].expiryDate.map((date, i) => {
                                         const dt = new Date(date)
                                         return <tr key={`medicine-expiry-${medicine}-${i}`}>
-                                            <td>{`${months[dt.getMonth()]}-${dt.getFullYear()}`}</td>
+                                            <td className='text-nowrap'>{`${months[dt.getMonth()]}-${dt.getFullYear()}`}</td>
                                             <td align='right'>
                                                 <span 
                                                     className='handle-expiry'
