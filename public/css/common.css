@@ -50,3 +50,6 @@ td, th {
 .margin-left-10 {
     margin-left: 10px;
 }
+#root {
+    overflow: auto;
+}

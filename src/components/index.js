@@ -332,34 +332,37 @@ export default class Crud extends React.Component {
                         </div>
                     </div>
                 </div>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Company Name</th>
-                            <th>Drug Name</th>
-                            <th>Expiry Date</th>
-                            <th>Quantity</th>
-                        </tr>
-                    </thead>
-                        {
-                            this.state.loading ? <tbody>
-                                        <tr>
-                                        <td colSpan={4} align='center'>Loading...</td>
-                                    </tr> 
-                                </tbody> :
-                            <InfiniteScroll
-                                pageStart={0}
-                                loadMore={this.loadMore}
-                                hasMore={records < medicines.length}
-                                loader={<h4 className="loader">Loading...</h4>}
-                                useWindow={false}
-                                element="tbody"
-                                isReverse={true}
-                                >
-                                {this.showItems()}
-                            </InfiniteScroll>
-                        }
-                </table>
+                <div style={{overflow: 'auto'}}>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Company Name</th>
+                                <th>Drug Name</th>
+                                <th>Expiry Date</th>
+                                <th>Quantity</th>
+                            </tr>
+                        </thead>
+                            {
+                                this.state.loading ? <tbody>
+                                            <tr>
+                                            <td colSpan={4} align='center'>Loading...</td>
+                                        </tr> 
+                                    </tbody> :
+                                <InfiniteScroll
+                                    pageStart={0}
+                                    loadMore={this.loadMore}
+                                    hasMore={records < medicines.length}
+                                    loader={<h4 className="loader">Loading...</h4>}
+                                    useWindow={false}
+                                    element="tbody"
+                                    isReverse={true}
+                                    >
+                                    {this.showItems()}
+                                </InfiniteScroll>
+                            }
+                    </table>
+                </div>
                 {
                     this.state.showModal &&
                         <div className='my-modal-body'>
