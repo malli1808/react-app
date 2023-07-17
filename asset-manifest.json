@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/medical-stock/static/css/main.e6c13ad2.css",
-    "main.js": "/medical-stock/static/js/main.abf8e05e.js",
+    "main.js": "/medical-stock/static/js/main.becc7700.js",
     "static/js/787.b701888c.chunk.js": "/medical-stock/static/js/787.b701888c.chunk.js",
     "index.html": "/medical-stock/index.html",
     "main.e6c13ad2.css.map": "/medical-stock/static/css/main.e6c13ad2.css.map",
-    "main.abf8e05e.js.map": "/medical-stock/static/js/main.abf8e05e.js.map",
+    "main.becc7700.js.map": "/medical-stock/static/js/main.becc7700.js.map",
     "787.b701888c.chunk.js.map": "/medical-stock/static/js/787.b701888c.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.e6c13ad2.css",
-    "static/js/main.abf8e05e.js"
+    "static/js/main.becc7700.js"
   ]
 }
