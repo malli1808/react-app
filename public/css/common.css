@@ -1,0 +1,52 @@
+body {
+    background-color: #dfd5f7;
+    padding: 15px;
+}
+table {
+    width: 100%;
+    border: 1px solid;
+    font-size: 16px;
+}
+tr {
+    border: 1px solid;
+}
+td, th {
+    border-right: 1px solid;
+    padding: 5px;
+}
+.handle-expiry {
+    color: white;
+    background: blue;
+    padding: 1px 10px 4px 10px;
+    cursor: pointer;
+    white-space: nowrap;
+}
+.no-border {
+    border: 0px;
+}
+.no-border tr {
+    border: 0px;
+}
+.no-border td {
+    border: 0px;
+}
+.my-modal-body {
+    position: absolute;
+    width: 100%;
+    top: 0;
+    opacity: 1;
+    background: #00000070;
+    height: 100%;
+    margin-left: -15px;
+    overflow: auto;
+}
+.my-modal {
+    padding: 15px;
+    margin: 15px;
+    background: white;
+    border-radius: 1%;
+    margin-top: 10vh;
+}
+.margin-left-10 {
+    margin-left: 10px;
+}
