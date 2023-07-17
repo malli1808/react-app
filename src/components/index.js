@@ -46,15 +46,16 @@ export default class Crud extends React.Component {
         })
     }
     handleMedicineEntrySubmit = (formMedicineDetails, uniqueID) => {
-        const {db, medicines} = this.state    
+        const {db, medicines, filteredMedicines} = this.state    
         if(uniqueID > 0) {
             const originalMedicineDetails = medicines[uniqueID]
             formMedicineDetails.expiryDate = originalMedicineDetails.expiryDate
             update(ref(db, 'medicines/'+uniqueID), formMedicineDetails)
             .then((res) => {
                 medicines[uniqueID] = formMedicineDetails
+                filteredMedicines[uniqueID] = formMedicineDetails
                 document.body.style.overflow = 'unset'
-                this.setState({showModal: false, medicines})
+                this.setState({showModal: false, medicines, filteredMedicines})
                 alert('Data updated successfully')
             })
             .catch(err => {
@@ -328,7 +329,13 @@ export default class Crud extends React.Component {
                             />
                         </div>
                         <div className='col-md-3' style={{marginTop: '25px'}}>
-                            <button onClick={this.filterData} type='button' className='btn btn-primary'>Filter</button>
+                            <button 
+                                onClick={this.filterData} 
+                                type='button' 
+                                className='btn btn-primary'
+                            >
+                                Filter
+                            </button>
                         </div>
                     </div>
                 </div>
