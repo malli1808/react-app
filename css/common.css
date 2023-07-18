@@ -1,6 +1,17 @@
 body {
     background-color: #dfd5f7;
+}
+.p-15 {
     padding: 15px;
+}
+.m-15 {
+    margin: 15px;
+}
+.m-0 {
+    margin: 0px;
+}
+.p-0 {
+    padding: 0px;
 }
 table {
     width: 100%;
@@ -52,4 +63,12 @@ td, th {
 }
 #root {
     overflow: auto;
+}
+.header-block {
+    background-color: #fff;
+    padding: 10px;
+    text-align: center;
+}
+.logo-width {
+    width: 50px;
 }
