@@ -11,6 +11,7 @@ export default class Crud extends React.Component {
     constructor(props) {
         super(props)
         this.expiryDateInputRef = React.createRef()
+        this.expriyQuantity = React.createRef()
         this.state = {
             db: '',
             medicineUniqueID: 0,
@@ -91,13 +92,16 @@ export default class Crud extends React.Component {
             })
         }
     }
-    handleExpiryDateEntry = (uniqueID) => {
+    handleExpiryDateEntry = (e, uniqueID) => {
+        e.preventDefault()
         const {medicines, db} = this.state
         if(medicines[uniqueID]) {
             medicines[uniqueID]['expiryDate'].push(this.expiryDateInputRef.current.value)
+            medicines[uniqueID]['quantity'] = parseInt(medicines[uniqueID]['quantity']) + parseInt(this.expriyQuantity.current.value)
             update(ref(db, 'medicines/'+uniqueID), medicines[uniqueID])
             .then((res) => {
-                this.setState({medicines})
+                document.body.style.overflow = 'unset'
+                this.setState({medicines, addMedicineExpiryUniqueID: 0})
                 alert('Expiry Date Updated Successfully')
             })
             .catch(err => {
@@ -109,22 +113,30 @@ export default class Crud extends React.Component {
     }
     handleDeleteExpiry = (uniqueID, index) => {
         const {medicines, db} = this.state
-        if(medicines[uniqueID] && window.confirm("Are you sure you want to delete?")) {
-            medicines[uniqueID]['expiryDate'].splice(index,1)
-            update(ref(db, 'medicines/'+uniqueID), medicines[uniqueID])
-            .then((res) => {
-                this.setState({medicines})
-                alert('Expiry Date Deleted Successfully')
-            })
-            .catch(err => {
-                alert("Something went wrong, please try after sometime")
-            })
+        if(medicines[uniqueID]) {
+            const inputval = window.prompt("Quantity", 0)
+            if(inputval === null)
+                return;
+            if(parseInt(inputval) >= 0 && medicines[uniqueID]['quantity'] > parseInt(inputval)) {
+                medicines[uniqueID]['expiryDate'].splice(index,1)
+                medicines[uniqueID]['quantity'] = parseInt(medicines[uniqueID]['quantity']) - parseInt(inputval)
+                update(ref(db, 'medicines/'+uniqueID), medicines[uniqueID])
+                .then((res) => {
+                    this.setState({medicines})
+                    alert('Expiry Date Deleted Successfully')
+                })
+                .catch(err => {
+                    alert("Something went wrong, please try after sometime")
+                })
+            }else{
+                alert("Please check and enter valid quantity")
+            }
         }else{
             alert("No Data Found")
         }
     }
     showItems = () => {
-        let {medicines, addMedicineExpiryUniqueID, filteredMedicines, filter} = this.state
+        let {medicines, filteredMedicines, filter} = this.state
         medicines = filter ? filteredMedicines : medicines
         var items = [];
         Object.keys(medicines).forEach(medicine => {
@@ -136,32 +148,12 @@ export default class Crud extends React.Component {
                         <table className='no-border'>
                             <tbody>
                                 <tr>
-                                    {
-                                        addMedicineExpiryUniqueID === medicine && 
-                                            <td>
-                                                <input type='date' ref={this.expiryDateInputRef}/>
-                                                <button 
-                                                    type='button' 
-                                                    className='btn btn-primary margin-left-10'
-                                                    onClick={() => this.handleExpiryDateEntry(medicine)}
-                                                >
-                                                    Submit
-                                                </button>
-                                                <button 
-                                                    onClick={() => this.setState({addMedicineExpiryUniqueID: 0})} 
-                                                    type='button' 
-                                                    className='btn btn-secondary margin-left-10'
-                                                >
-                                                    Cancel
-                                                </button>
-                                            </td>
-                                    }
                                     <td 
-                                        colSpan={addMedicineExpiryUniqueID === medicine ? '' : 2} 
+                                        colSpan={2} 
                                         align='right'
                                         >
                                         <span 
-                                            onClick={() => this.setState({addMedicineExpiryUniqueID: medicine})} 
+                                            onClick={() => this.toggleMOdal(medicine, 'expire')} 
                                             className='handle-expiry'
                                         >
                                             + Add
@@ -203,13 +195,19 @@ export default class Crud extends React.Component {
             records: records + itemsPerPage
         })
     }
-    toggleMOdal = (uniqueID = 0) => {
+    toggleMOdal = (uniqueID = 0, type = '') => {
         const {showModal} = this.state
-        const updatedState = {showModal: !showModal}
-        updatedState['medicineUniqueID'] = uniqueID
-        document.body.style.overflow = 'unset'
-        if(!showModal)
-            document.body.style.overflow = 'hidden'
+        const updatedState = {}
+        let overflow = 'unset'
+        if(type === 'expire') {
+            updatedState['addMedicineExpiryUniqueID'] = uniqueID
+            overflow = uniqueID > 0 ? 'hidden' : 'unset'
+        }else {
+            updatedState['showModal'] = !showModal
+            updatedState['medicineUniqueID'] = uniqueID
+            overflow = !showModal ? 'hidden' : 'unset'
+        }
+        document.body.style.overflow = overflow
         window.scrollTo(0, 0)
         this.setState(updatedState)
     }
@@ -250,8 +248,8 @@ export default class Crud extends React.Component {
     filterMedicineQuantity = medicineDetails => {
         const {filterQuantity, quantityFilterCondition} = this.state.filterValues
         const condition1 = quantityFilterCondition || '='
-        return filterQuantity ? (
-            (condition1 === '=' && medicineDetails.quantity === filterQuantity) ||
+        return filterQuantity && filterQuantity >= 0 ? (
+            (condition1 === '=' && parseInt(medicineDetails.quantity) === parseInt(filterQuantity)) ||
             (condition1 === '>' && parseInt(medicineDetails.quantity) > parseInt(filterQuantity)) ||
             (condition1 === '<' && parseInt(medicineDetails.quantity) < parseInt(filterQuantity))
         ) : true
@@ -274,7 +272,7 @@ export default class Crud extends React.Component {
         return (
             <>
             <header className='header-block'>
-                    <img src={logo} className='logo-width'/>
+                    <img alt='malli-friends-logo' src={logo} className='logo-width'/>
                     <h4 className='m-0'>MalliFriends</h4>
                 </header>
                 <div className='p-15'>
@@ -396,34 +394,48 @@ export default class Crud extends React.Component {
                                 />
                             </div>
                     }
-                    {/* {
+                    {
                         this.state.addMedicineExpiryUniqueID > 0 &&
                             <div className='my-modal-body'>
                                 <div className='my-modal'>
                                     <h3>Add Expiry Date Entry</h3>
-                                    <div className="form-group">
-                                            <label htmlFor="expiryDate">Expiry:</label>
-                                            <input 
-                                                type="date" 
-                                                className="form-control" 
-                                                id="expiryDate" 
-                                                placeholder="Enter password" 
-                                                name="expiryDate" 
-                                                // value={medicineData.expiryDate}
-                                                // onChange={this.handleChange}
-                                            />
-                                        </div>
-                                        <div className='text-center'>
-                                            <button type='button' className='btn btn-primary'>
-                                                Add Entry
-                                            </button>
-                                            <button type='button' className='btn btn-secondary margin-left-10'>
-                                                Cancel
-                                            </button>
-                                        </div>
+                                        <form onSubmit={e => this.handleExpiryDateEntry(e, this.state.addMedicineExpiryUniqueID)}>
+                                            <div className="form-group">
+                                                <label htmlFor="expiryDateInputRef">Expiry:</label>
+                                                <input 
+                                                    type="date" 
+                                                    className="form-control" 
+                                                    placeholder="Enter password" 
+                                                    ref={this.expiryDateInputRef}
+                                                    id='expiryDateInputRef'
+                                                    name='expiryDateInputRef'
+                                                    required
+                                                />
+                                            </div>
+                                            <div className="form-group">
+                                                <label htmlFor="expriyQuantity">Quantity:</label>
+                                                <input 
+                                                    type="number" 
+                                                    className="form-control" 
+                                                    placeholder="Enter Quantity" 
+                                                    ref={this.expriyQuantity}
+                                                    id='expriyQuantity'
+                                                    name='expriyQuantity'
+                                                    required
+                                                />
+                                            </div>
+                                            <div className='text-center'>
+                                                <button type='submit' className='btn btn-primary'>
+                                                    Add Entry
+                                                </button>
+                                                <button onClick={() => this.toggleMOdal(0, 'expire')}  type='button' className='btn btn-secondary margin-left-10'>
+                                                    Cancel
+                                                </button>
+                                            </div>
+                                        </form>
                                 </div>
                             </div>
-                    } */}
+                    }
                 </div>
             </>
         )
