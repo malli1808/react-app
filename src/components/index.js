@@ -2,6 +2,7 @@ import React  from 'react'
 import MedicineEntry from './medicineEntry';
 import InfiniteScroll from "react-infinite-scroller";
 import startFirebase from './config/firebaseConfig'
+import logo from '../MA-Logo.jpg'
 import { ref, set, get, update, remove, child } from 'firebase/database'
 
 const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
@@ -186,7 +187,11 @@ export default class Crud extends React.Component {
                             </tbody>
                         </table>
                     </td>
-                    <td>{medicines[medicine].quantity}</td>
+                    <td>
+                       {/* <button className='btn btn-primary'>-</button>  */}
+                       {medicines[medicine].quantity}
+                       {/* <button className='btn btn-primary'>+</button> */}
+                    </td>
                 </tr>
             )
         })
@@ -267,152 +272,160 @@ export default class Crud extends React.Component {
     render() {
         const {records, medicines} = this.state
         return (
-            <div>
-                <h2 className='text-center'>
-                    Sri Balaji Medical - Stock List
-                    <button 
-                        className='pull-right btn btn-primary'
-                        onClick={() => this.toggleMOdal()}
-                    >
-                        Add Medicine
-                    </button>
-                </h2>
-                <div style={{padding: '10px'}}>
-                    <div className='row'>
-                        <div className='col-md-3'>
-                            <label>Company Name / Drug Name</label>
-                            <input 
-                                onChange={this.handleFilterValues} 
-                                name='filterCompanyName' 
-                                placeholder='Company Name' 
-                                className='form-control'
-                            />
-                        </div>
-                        <div className='col-md-3'>
-                            <label>Expiry Date</label>
-                            <select 
-                                onChange={this.handleFilterValues} 
-                                name='expiryFilterCondition' 
-                                className='margin-left-10' 
-                                style={{width: '30%'}}
-                            >
-                                <option>{`=`}</option>
-                                <option>{`<`}</option>
-                                <option>{`>`}</option>
-                            </select>
-                            <input 
-                                type='date' 
-                                className='form-control'
-                                name='filterExpiryDate'
-                                onChange={this.handleFilterValues}
-                            />
-                        </div>
-                        <div className='col-md-3'>
-                            <label>Quantity</label>
-                            <select 
-                                name='quantityFilterCondition' 
-                                className='margin-left-10' 
-                                style={{width: '30%'}}
-                                onChange={this.handleFilterValues}
-                            >
-                                <option>{`=`}</option>
-                                <option>{`<`}</option>
-                                <option>{`>`}</option>
-                            </select>
-                            <input 
-                                type='number' 
-                                name='filterQuantity'
-                                min={0} 
-                                placeholder='Quantity' 
-                                className='form-control'
-                                onChange={this.handleFilterValues}
-                            />
-                        </div>
-                        <div className='col-md-3' style={{marginTop: '25px'}}>
-                            <button 
-                                onClick={this.filterData} 
-                                type='button' 
-                                className='btn btn-primary'
-                            >
-                                Filter
-                            </button>
-                        </div>
+            <>
+            <header className='header-block'>
+                    <img src={logo} className='logo-width'/>
+                    <h4 className='m-0'>MalliFriends</h4>
+                </header>
+                <div className='p-15'>
+                    <h2 className='text-center m-0'>
+                        Sri Balaji Medical - Stock List
+                    </h2>
+                    <div className='text-right'>
+                        <button 
+                            className='btn btn-primary'
+                            onClick={() => this.toggleMOdal()}
+                        >
+                            Add Medicine
+                        </button>
                     </div>
-                </div>
-                <div style={{overflow: 'auto'}}>
-
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Company Name</th>
-                                <th>Drug Name</th>
-                                <th>Expiry Date</th>
-                                <th>Quantity</th>
-                            </tr>
-                        </thead>
-                            {
-                                this.state.loading ? <tbody>
-                                            <tr>
-                                            <td colSpan={4} align='center'>Loading...</td>
-                                        </tr> 
-                                    </tbody> :
-                                <InfiniteScroll
-                                    pageStart={0}
-                                    loadMore={this.loadMore}
-                                    hasMore={records < medicines.length}
-                                    loader={<h4 className="loader">Loading...</h4>}
-                                    useWindow={false}
-                                    element="tbody"
-                                    isReverse={true}
-                                    >
-                                    {this.showItems()}
-                                </InfiniteScroll>
-                            }
-                    </table>
-                </div>
-                {
-                    this.state.showModal &&
-                        <div className='my-modal-body'>
-                            <MedicineEntry 
-                                toggleMOdal={this.toggleMOdal}
-                                medicineDetails={
-                                    this.state.medicineUniqueID > 0 ? 
-                                        {...this.state.medicines[this.state.medicineUniqueID], uniqueID: this.state.medicineUniqueID} : null
-                                }
-                                deleteMedicine={this.deleteMedicine}
-                                handleMedicineEntrySubmit={this.handleMedicineEntrySubmit}
-                            />
-                        </div>
-                }
-                {/* {
-                    this.state.addMedicineExpiryUniqueID > 0 &&
-                        <div className='my-modal-body'>
-                            <div className='my-modal'>
-                                <h3>Add Expiry Date Entry</h3>
-                                <div className="form-group">
-                                        <label htmlFor="expiryDate">Expiry:</label>
-                                        <input 
-                                            type="date" 
-                                            className="form-control" 
-                                            id="expiryDate" 
-                                            placeholder="Enter password" 
-                                            name="expiryDate" 
-                                            // value={medicineData.expiryDate}
-                                            // onChange={this.handleChange}
-                                        />
-                                    </div>
-                                    <div className='text-center'>
-                                        <button type='button' className='btn btn-primary'>
-                                            Add Entry
-                                        </button>
-                                        <button type='button' className='btn btn-secondary margin-left-10'>
-                                            Cancel
-                                        </button>
-                                    </div>
+                    <div style={{padding: '10px'}}>
+                        <div className='row'>
+                            <div className='col-md-3'>
+                                <label>Company Name / Drug Name</label>
+                                <input 
+                                    onChange={this.handleFilterValues} 
+                                    name='filterCompanyName' 
+                                    placeholder='Company Name' 
+                                    className='form-control'
+                                />
+                            </div>
+                            <div className='col-md-3'>
+                                <label>Expiry Date</label>
+                                <select 
+                                    onChange={this.handleFilterValues} 
+                                    name='expiryFilterCondition' 
+                                    className='margin-left-10' 
+                                    style={{width: '30%'}}
+                                >
+                                    <option>{`=`}</option>
+                                    <option>{`<`}</option>
+                                    <option>{`>`}</option>
+                                </select>
+                                <input 
+                                    type='date' 
+                                    className='form-control'
+                                    name='filterExpiryDate'
+                                    onChange={this.handleFilterValues}
+                                />
+                            </div>
+                            <div className='col-md-3'>
+                                <label>Quantity</label>
+                                <select 
+                                    name='quantityFilterCondition' 
+                                    className='margin-left-10' 
+                                    style={{width: '30%'}}
+                                    onChange={this.handleFilterValues}
+                                >
+                                    <option>{`=`}</option>
+                                    <option>{`<`}</option>
+                                    <option>{`>`}</option>
+                                </select>
+                                <input 
+                                    type='number' 
+                                    name='filterQuantity'
+                                    min={0} 
+                                    placeholder='Quantity' 
+                                    className='form-control'
+                                    onChange={this.handleFilterValues}
+                                />
+                            </div>
+                            <div className='col-md-3' style={{marginTop: '25px'}}>
+                                <button 
+                                    onClick={this.filterData} 
+                                    type='button' 
+                                    className='btn btn-primary'
+                                >
+                                    Filter
+                                </button>
                             </div>
                         </div>
-                } */}
-            </div>
+                    </div>
+                    <div style={{overflow: 'auto'}}>
+
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Company Name</th>
+                                    <th>Drug Name</th>
+                                    <th>Expiry Date</th>
+                                    <th>Quantity</th>
+                                </tr>
+                            </thead>
+                                {
+                                    this.state.loading ? <tbody>
+                                                <tr>
+                                                <td colSpan={4} align='center'>Loading...</td>
+                                            </tr> 
+                                        </tbody> :
+                                    <InfiniteScroll
+                                        pageStart={0}
+                                        loadMore={this.loadMore}
+                                        hasMore={records < medicines.length}
+                                        loader={<h4 className="loader">Loading...</h4>}
+                                        useWindow={false}
+                                        element="tbody"
+                                        isReverse={true}
+                                        >
+                                        {this.showItems()}
+                                    </InfiniteScroll>
+                                }
+                        </table>
+                    </div>
+                    {
+                        this.state.showModal &&
+                            <div className='my-modal-body'>
+                                <MedicineEntry 
+                                    toggleMOdal={this.toggleMOdal}
+                                    medicineDetails={
+                                        this.state.medicineUniqueID > 0 ? 
+                                            {...this.state.medicines[this.state.medicineUniqueID], uniqueID: this.state.medicineUniqueID} : null
+                                    }
+                                    deleteMedicine={this.deleteMedicine}
+                                    handleMedicineEntrySubmit={this.handleMedicineEntrySubmit}
+                                />
+                            </div>
+                    }
+                    {/* {
+                        this.state.addMedicineExpiryUniqueID > 0 &&
+                            <div className='my-modal-body'>
+                                <div className='my-modal'>
+                                    <h3>Add Expiry Date Entry</h3>
+                                    <div className="form-group">
+                                            <label htmlFor="expiryDate">Expiry:</label>
+                                            <input 
+                                                type="date" 
+                                                className="form-control" 
+                                                id="expiryDate" 
+                                                placeholder="Enter password" 
+                                                name="expiryDate" 
+                                                // value={medicineData.expiryDate}
+                                                // onChange={this.handleChange}
+                                            />
+                                        </div>
+                                        <div className='text-center'>
+                                            <button type='button' className='btn btn-primary'>
+                                                Add Entry
+                                            </button>
+                                            <button type='button' className='btn btn-secondary margin-left-10'>
+                                                Cancel
+                                            </button>
+                                        </div>
+                                </div>
+                            </div>
+                    } */}
+                </div>
+            </>
         )
     }
 }
